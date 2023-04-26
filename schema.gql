@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Friend {
+  id: String
+  name: String
+  friends: [Friend!]
+  friend: UserType!
+}
+
+type UserType {
+  id: String
+  name: String
+  friends: [Friend!]
+}
+
+type Query {
+  users: [UserType!]!
+}

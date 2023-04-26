@@ -1,0 +1,227 @@
+[
+    {
+        "id": "1",
+        "name": "Alice",
+        "age": 25,
+        "friends": [
+            {
+                "id": "2",
+                "name": "Bob",
+                "age": 27
+            },
+            {
+                "id": "3",
+                "name": "Charlie",
+                "age": 28
+            }
+        ],
+        "providerResponse": {
+            "id": "1",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "2",
+        "name": "Bob",
+        "age": 27,
+        "friends": [
+            {
+                "id": "1",
+                "name": "Alice",
+                "age": 25
+            },
+            {
+                "id": "4",
+                "name": "Dave",
+                "age": 29
+            }
+        ],
+        "providerResponse": {
+            "id": "2",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "3",
+        "name": "Charlie",
+        "age": 28,
+        "friends": [
+            {
+                "id": "1",
+                "name": "Alice",
+                "age": 25
+            },
+            {
+                "id": "5",
+                "name": "Eve",
+                "age": 26
+            }
+        ],
+        "providerResponse": {
+            "id": "3",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "4",
+        "name": "Dave",
+        "age": 29,
+        "friends": [
+            {
+                "id": "2",
+                "name": "Bob",
+                "age": 27
+            },
+            {
+                "id": "6",
+                "name": "Frank",
+                "age": 30
+            }
+        ],
+        "providerResponse": {
+            "id": "4",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "5",
+        "name": "Eve",
+        "age": 26,
+        "friends": [
+            {
+                "id": "3",
+                "name": "Charlie",
+                "age": 28
+            },
+            {
+                "id": "8",
+                "name": "Henry",
+                "age": 32
+            }
+        ],
+        "providerResponse": {
+            "id": "5",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "6",
+        "name": "Frank",
+        "age": 30,
+        "friends": [
+            {
+                "id": "4",
+                "name": "Dave",
+                "age": 29
+            },
+            {
+                "id": "8",
+                "name": "Henry",
+                "age": 32
+            }
+        ],
+        "providerResponse": {
+            "id": "6",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "8",
+        "name": "Henry",
+        "age": 32,
+        "friends": [
+            {
+                "id": "6",
+                "name": "Frank",
+                "age": 30
+            },
+            {
+                "id": "9",
+                "name": "Isaac",
+                "age": 29
+            }
+        ],
+        "providerResponse": {
+            "id": "8",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "9",
+        "name": "Isaac",
+        "age": 29,
+        "friends": [
+            {
+                "id": "8",
+                "name": "Henry",
+                "age": 32
+            },
+            {
+                "id": "10",
+                "name": "Jack",
+                "age": 28
+            }
+        ],
+        "providerResponse": {
+            "id": "9",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "10",
+        "name": "Jack",
+        "age": 28,
+        "friends": [
+            {
+                "id": "9",
+                "name": "Isaac",
+                "age": 29
+            },
+            {
+                "id": "1",
+                "name": "Alice",
+                "age": 25
+            }
+        ],
+        "providerResponse": {
+            "id": "10",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    },
+    {
+        "id": "11",
+        "name": "Karen",
+        "age": 27,
+        "friends": [
+            {
+                "id": "2",
+                "name": "Bob",
+                "age": 27
+            },
+            {
+                "id": "5",
+                "name": "Eve",
+                "age": 26
+            },
+            {
+                "id": "9",
+                "name": "Isaac",
+                "age": 29
+            }
+        ],
+        "providerResponse": {
+            "id": "11",
+            "status": "OK",
+            "message": "User data retrieved successfully"
+        }
+    }
+]
