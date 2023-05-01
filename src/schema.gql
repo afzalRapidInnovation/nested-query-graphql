@@ -2,19 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Friend {
-  id: String
+type PersonType {
+  _id: String
   name: String
-  friends: [Friend!]
-  friend: UserType!
+  pets: [PetsType!]
+  searchOwnerPets(search: String!): [PetsType!]!
+  SearchPets(search: String!): [PetsType!]!
 }
 
-type UserType {
-  id: String
+type PetsType {
+  _id: String
   name: String
-  friends: [Friend!]
+  owner: PersonType!
 }
 
 type Query {
-  users: [UserType!]!
+  getPerson(id: String!): PersonType!
+  gtePetById(id: String!): PetsType!
 }

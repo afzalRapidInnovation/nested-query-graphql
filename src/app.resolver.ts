@@ -1,221 +1,107 @@
-import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
-import * as users from './db/db.json';
-import { Friend, User, UserType } from './graphql/types';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { AppService } from './app.service';
+import { PersonType, PetsType } from './graphql/types';
 
-// interface Friend {
-//   id: string;
-//   name: string;
-//   age: number;
+// NOTE -1st
+// @Query(() => PersonType, {
+//   name: 'getPerson',
+// })
+// async person(@Args('id') id: string): Promise<Person> {
+//   return this.appService.getPersonByIdPopulate(id);
 // }
 
-// @ObjectType()
-// class ProviderResponseType implements ProviderResponse {
-//   @Field({ nullable: true })
-//   id: string;
+// NOTE - 2ND
 
-//   @Field({ nullable: true })
-//   status: string;
+@Resolver(() => PersonType)
+export class AppResolver {
+  constructor(private readonly appService: AppService) {}
 
-//   @Field({ nullable: true })
-//   message: string;
-// }
-
-// @ObjectType()
-// class FriendType implements Friend {
-//   @Field({nullable: true})
-//   id: string;
-
-//   @Field({nullable: true})
-//   name: string;
-
-//   @Field({nullable: true})
-//   age: number;
-
-//   @Field({nullable: true})
-//   friend;
-// }
-
-// @ObjectType()
-// class UserType implements User {
-//   @Field({nullable: true})
-//   id: string;
-
-//   @Field({nullable: true})
-//   name: string;
-
-//   @Field({nullable: true})
-//   age: number;
-
-//   @Field(() => [FriendType],{nullable: true})
-//   friends: FriendType[];
-
-//   @Field(() => ProviderResponseType,{nullable: true})
-//   providerResponse: ProviderResponseType;
-// }
-
-// @Resolver(() => UserType)
-// export class UserResolver {
-//   @Query(() => [UserType])
-//   users() {
-//     return users;
-//   }
-
-//   @ResolveField()
-//   friends(@Parent() user: User): any {
-//     return user.friends.map((friend) => {
-//       const friendData = users.find((u) => u.id === friend.id);
-//       return {
-//         ...friend,
-//         friends: friendData ? friendData.friends : [],
-//       };
-//     });
-//   }
-// }
-
-@Resolver(() => UserType)
-export class UserResolver {
-  @Query(() => [UserType])
-  users() {
-    return users;
+  @Query(() => PersonType)
+  async getPerson(@Args('id') id: string) {
+    return this.appService.getPersonByIdPopulate(id);
   }
 
-  @ResolveField()
-  friends(@Parent() user: User): Friend[] {
-    return user.friends.map((friend) => {
-      const friendData = users.find((u) => u.id === friend.id);
-      if (!friendData) {
-        throw new Error(`Could not find friend with ID ${friend.id}`);
-      }
-      // Check if the friend is the user itself
-      if (friendData.id === user.id) {
-        // Continue mapping the friends of the user instead
-        return {
-          ...friendData,
-          friends: user.friends
-            .filter((f) => f.id !== user.id)
-            .map((f) => {
-              const fData = users.find((u) => u.id === f.id);
-              if (!fData) {
-                throw new Error(`Could not find friend with ID ${f.id}`);
-              }
-              return {
-                ...fData,
-                friends: [],
-              };
-            }),
-        };
-      }
-      // If friend is not the user itself, continue mapping the friend as normal
-      return {
-        ...friend,
-        friends: friendData.friends.map((f) => {
-          const fData = users.find((u) => u.id === f.id);
-          if (!fData) {
-            throw new Error(`Could not find friend with ID ${f.id}`);
-          }
-          return {
-            ...fData,
-            friends: [],
-          };
-        }),
-      };
-    });
+  @ResolveField(() => [PetsType], { name: 'pets' })
+  async pets(@Parent() person: PersonType) {
+    const pets = await this.appService.getPetsByOwnerId(person._id);
+    console.log(pets);
+    return pets;
   }
+
+  @ResolveField(() => [PetsType], { name: 'searchOwnerPets' })
+  async searchOwnerPets(
+    @Parent() person: PersonType,
+    @Args('search') search: string,
+  ) {
+    const pets = await this.appService.searchPetByOwnerId(person._id, search);
+    console.log(pets);
+    return pets;
+  }
+
+  @ResolveField(() => [PetsType], { name: 'SearchPets' })
+  async searchPets(
+    @Parent() person: PersonType,
+    @Args('search') search: string,
+  ) {
+    const pets = await this.appService.searchPetByName(search);
+    console.log(pets);
+    return pets;
+  }
+
+  // @ResolveField(() => [PetsType], { name: 'pets' })
+  // async pets(@Parent() person: PersonType) {
+  //   const pets = await this.appService.getPetsByOwnerIdPopulate(person._id);
+  //   console.log(pets);
+  //   return pets;
+  // }
 }
 
-@Resolver(() => Friend)
-export class FriendResolver {
-  @ResolveField(() => UserType)
-  friend(@Parent() friend: Friend): any {
-    // let friendData: any = users.find((u) => u.id === friend.id);
-    // console.log(friendData);
-    // if (!friendData) {
-    //   throw new Error(`Could not find friend with ID ${friend.id}`);
-    // }
-    // // return friendData;
-    // friendData =
-    //   friendData.friends.map((f) => {
-    //     const fData = users.find((u) => u.id === f.id);
-    //     if (!fData) {
-    //       throw new Error(`Could not find friend with ID ${f.id}`);
-    //     }
-    //     return {
-    //       ...fData,
-    //       friends: [],
-    //     };
-    //   }) ?? friendData;
-    // return friendData;
+// @ResolveField(() => PersonType, {
+//   name: 'owner',
+// })
+// async getOwnerDetails(@Parent() personType: PersonType) {
+//   const { _id } = personType;
+//   const person = await this.appService.getPersonByIdPopulate(_id);
+//   return person;
+// }
 
-    let friendData: any = users.find((u) => u.id === friend.id);
-    console.log(friendData);
-    if (!friendData) {
-      throw new Error(`Could not find friend with ID ${friend.id}`);
-    }
+// NOTE - 1ST
+// @Resolver((of) => PetsType)
+// export class PetsResolver {
+//   constructor(private readonly appService: AppService) {}
 
-    if (!friendData.friends) {
-      return friendData;
-    }
+//   @
 
-    friendData = {
-      ...friendData,
-      friends: friendData.friends.map((f) => {
-        const fData = users.find((u) => u.id === f.id);
-        if (!fData) {
-          throw new Error(`Could not find friend with ID ${f.id}`);
-        }
-        return {
-          ...fData,
-          friends: fData.friends
-            ? fData.friends.map((ff) => {
-                const ffData = users.find((u) => u.id === ff.id);
-                if (!ffData) {
-                  throw new Error(`Could not find friend with ID ${ff.id}`);
-                }
-                return {
-                  ...ffData,
-                  friends: ffData.friends
-                    ? ffData.friends.map((fff) => {
-                        const fffData = users.find((u) => u.id === fff.id);
-                        if (!fffData) {
-                          throw new Error(
-                            `Could not find friend with ID ${fff.id}`,
-                          );
-                        }
-                        return {
-                          ...fffData,
-                          friends: [],
-                        };
-                      })
-                    : [],
-                };
-              })
-            : [],
-        };
-      }),
-    };
-
-    return friendData;
-
-    return {
-      ...friendData,
-      friends: friendData.friends.map((f) => {
-        const fData = users.find((u) => u.id === f.id);
-        if (!fData) {
-          throw new Error(`Could not find friend with ID ${f.id}`);
-        }
-        return {
-          ...fData,
-          friends: [],
-        };
-      }),
-    };
-  }
-}
-// @Resolver(() => FriendType)
-// export class FriendResolver {
-//   @ResolveField(() => [FriendType]) // Add type annotation for the friends field
-//   friends(@Parent() friend: FriendType): FriendType[] {
-//     const friendData = users.find((u) => u.id === friend.id);
-//     return friendData ? friendData.friends : [];
+//   @ResolveField(() => PersonType, { name: 'owner' })
+//   async getOwner(@Parent() pets: PetsType): Promise<PersonType> {
+//     const { _id } = pets.ownerId;
+//     const owner: any = await this.appService.getPersonByIdPopulate(_id);
+//     return owner;
 //   }
 // }
+
+// const car = {
+//   name,
+//   id,
+
+// }
+
+@Resolver(() => PetsType)
+export class PetsResolver {
+  constructor(private readonly appService: AppService) {}
+
+  @Query(() => PetsType, {
+    name: 'gtePetById',
+  })
+  async getPetById(@Args('id') id: string) {
+    return this.appService.getPetByIdWithPopulate(id);
+  }
+
+  @ResolveField(() => PersonType, { name: 'owner' })
+  async owner(@Parent() pets: PetsType) {
+    const ownerId = pets.ownerId._id;
+    const owner = await this.appService.getPersonById(ownerId);
+    console.log(owner);
+    return owner;
+  }
+}

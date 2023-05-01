@@ -1,49 +1,31 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {
+export class PersonType {
   @Field({ nullable: true })
-  id: string;
+  _id: string;
 
   @Field({ nullable: true })
   name: string;
 
-  @Field(() => [Friend], { nullable: true })
-  friends: Friend[];
+  @Field(() => [PetsType], { nullable: true })
+  pets?: PetsType[];
 }
 
 @ObjectType()
-export class Friend {
+export class PetsType {
   @Field({ nullable: true })
-  id: string;
+  _id: string;
 
   @Field({ nullable: true })
   name: string;
 
-  @Field(() => [Friend], { nullable: true })
-  friends: Friend[];
+  // @Field(() => PersonType, { nullable: true })
+  ownerId: PersonType;
 }
 
 @ObjectType()
-export class UserType {
-  @Field({ nullable: true })
-  id: string;
-
-  @Field({ nullable: true })
-  name: string;
-
-  @Field(() => [Friend], { nullable: true })
-  friends: Friend[];
-}
-
-@ObjectType()
-export class FriendType {
-  @Field({ nullable: true })
-  id: string;
-
-  @Field({ nullable: true })
-  name: string;
-
-  @Field(() => [Friend], { nullable: true })
-  friends: Friend[];
+export class UpdateUserResponse {
+  @Field()
+  message: string;
 }

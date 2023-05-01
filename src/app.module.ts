@@ -1,17 +1,11 @@
-import { HttpStatus, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { FriendResolver, UserResolver } from './app.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  FriendsSchema,
-  FriendsSchemaDb,
-  Users,
-  UsersSchema,
-} from './schema/schema';
-import mongoose from 'mongoose';
+import { PersonSchema, PetsSchema } from './schema/schema';
+import { AppResolver, PetsResolver } from './app.resolver';
 
 @Module({
   imports: [
@@ -25,18 +19,13 @@ import mongoose from 'mongoose';
         playground: true,
       }),
     }),
+    MongooseModule.forRoot('mongodb://localhost:27017/wated'),
     MongooseModule.forFeature([
-      { name: Users.name, schema: UsersSchema },
-      { name: FriendsSchema.name, schema: FriendsSchemaDb },
+      { name: 'Person', schema: PersonSchema },
+      { name: 'Pets', schema: PetsSchema },
     ]),
-
-    MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: 'mongodb://localhost:27017/nested',
-      }),
-    }),
   ],
   controllers: [AppController],
-  providers: [AppService, UserResolver, FriendResolver],
+  providers: [AppService, AppResolver, PetsResolver],
 })
 export class AppModule {}
