@@ -1,17 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { PersonType, PetsType } from './graphql/types';
-// import { Person } from './interfaces/person.interface';
-// import { Pets } from './interfaces/pets.interface';
+import { Model } from 'mongoose';
+import { PetsType } from './graphql/types';
+import { UpdateUserInput } from './graphql/input.type';
 
 @Injectable()
 export class AppService {
   constructor(
     @InjectModel('Person') private readonly personModel: Model<Person>,
     @InjectModel('Pets') private readonly petsModel: Model<Pets>,
-  ) {
-    this.getPetsByOwnerIdPopulate('617a1781d743311f35d464fc');
+  ) {}
+
+  async updateUserById(updateUserInput: UpdateUserInput) {
+    const person = await this.personModel.findByIdAndUpdate(
+      updateUserInput.personId,
+      { 'pets.petId': updateUserInput.petId, name: updateUserInput.name },
+    );
+    console.log(person);
+    return {
+      message: 'User updated sucessfully.',
+    };
   }
 
   async getPersonByIdPopulate(id: string): Promise<Person> {
@@ -52,7 +60,6 @@ export class AppService {
     const regexName = new RegExp(name, 'i');
     const pets = await this.petsModel.find({
       ownerId,
-      // name: { $regex: name },
       name: { $regex: regexName },
     });
 
@@ -67,16 +74,4 @@ export class AppService {
 
     return pets;
   }
-
-  // async getPetsByOwnerId(ownerId: string): Promise<Pets[]> {
-  //   const owner = await this.personModel.findById(ownerId);
-  //   if (!owner) {
-  //     throw new NotFoundException('Owner not found');
-  //   }
-  //   const petIds = owner.pets.map((pet) => pet.toString());
-  //   return this.petsModel
-  //     .find({ ownerId: { $in: petIds } })
-  //     .populate('owner')
-  //     .exec();
-  // }
 }

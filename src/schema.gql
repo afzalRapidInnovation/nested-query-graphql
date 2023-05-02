@@ -16,7 +16,21 @@ type PetsType {
   owner: PersonType!
 }
 
+type UpdateUserResponse {
+  message: String
+}
+
 type Query {
   getPerson(id: String!): PersonType!
   gtePetById(id: String!): PetsType!
+}
+
+type Mutation {
+  updateUser(input: UpdateUserInput!): UpdateUserResponse!
+}
+
+input UpdateUserInput {
+  personId: String!
+  name: String
+  petId: String
 }

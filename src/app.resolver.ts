@@ -1,16 +1,14 @@
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AppService } from './app.service';
-import { PersonType, PetsType } from './graphql/types';
-
-// NOTE -1st
-// @Query(() => PersonType, {
-//   name: 'getPerson',
-// })
-// async person(@Args('id') id: string): Promise<Person> {
-//   return this.appService.getPersonByIdPopulate(id);
-// }
-
-// NOTE - 2ND
+import { PersonType, PetsType, UpdateUserResponse } from './graphql/types';
+import { UpdateUserInput } from './graphql/input.type';
 
 @Resolver(() => PersonType)
 export class AppResolver {
@@ -26,6 +24,13 @@ export class AppResolver {
     const pets = await this.appService.getPetsByOwnerId(person._id);
     console.log(pets);
     return pets;
+  }
+
+  @Mutation(() => UpdateUserResponse, {
+    name: 'updateUser',
+  })
+  async updateUser(@Args('input') updateUserInput: UpdateUserInput) {
+    return await this.appService.updateUserById(updateUserInput);
   }
 
   @ResolveField(() => [PetsType], { name: 'searchOwnerPets' })
@@ -47,45 +52,7 @@ export class AppResolver {
     console.log(pets);
     return pets;
   }
-
-  // @ResolveField(() => [PetsType], { name: 'pets' })
-  // async pets(@Parent() person: PersonType) {
-  //   const pets = await this.appService.getPetsByOwnerIdPopulate(person._id);
-  //   console.log(pets);
-  //   return pets;
-  // }
 }
-
-// @ResolveField(() => PersonType, {
-//   name: 'owner',
-// })
-// async getOwnerDetails(@Parent() personType: PersonType) {
-//   const { _id } = personType;
-//   const person = await this.appService.getPersonByIdPopulate(_id);
-//   return person;
-// }
-
-// NOTE - 1ST
-// @Resolver((of) => PetsType)
-// export class PetsResolver {
-//   constructor(private readonly appService: AppService) {}
-
-//   @
-
-//   @ResolveField(() => PersonType, { name: 'owner' })
-//   async getOwner(@Parent() pets: PetsType): Promise<PersonType> {
-//     const { _id } = pets.ownerId;
-//     const owner: any = await this.appService.getPersonByIdPopulate(_id);
-//     return owner;
-//   }
-// }
-
-// const car = {
-//   name,
-//   id,
-
-// }
-
 @Resolver(() => PetsType)
 export class PetsResolver {
   constructor(private readonly appService: AppService) {}

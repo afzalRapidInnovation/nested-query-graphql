@@ -26,6 +26,6 @@ export class PetsType {
 
 @ObjectType()
 export class UpdateUserResponse {
-  @Field()
+  @Field({ nullable: true })
   message: string;
 }
